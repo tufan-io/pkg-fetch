@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
 
-import { EXPECTED_HASHES } from './expected';
+// import { EXPECTED_HASHES } from './expected';
 import {
   abiToNodeRange,
   hostPlatform, // eslint-disable-line no-duplicate-imports
@@ -121,12 +121,15 @@ export async function need(opts: NeedOptions) {
         return 'exists';
       }
 
-      if ((await hash(fetched)) === EXPECTED_HASHES[remote.name]) {
-        return fetched;
-      }
+      /* tufan.io: skip hash validation */
+      return fetched;
 
-      log.info('Binary hash does NOT match. Re-fetching...');
-      fs.unlinkSync(fetched);
+      // if ((await hash(fetched)) === EXPECTED_HASHES[remote.name]) {
+      //   return fetched;
+      // }
+
+      // log.info('Binary hash does NOT match. Re-fetching...');
+      // fs.unlinkSync(fetched);
     }
   }
 
@@ -143,12 +146,15 @@ export async function need(opts: NeedOptions) {
     if (dryRun) return 'fetched';
 
     if (await download(remote, fetched)) {
-      if ((await hash(fetched)) === EXPECTED_HASHES[remote.name]) {
-        return fetched;
-      }
+      return fetched;
+      
+      /* tufan.io: skip hash validation */
+      // if ((await hash(fetched)) === EXPECTED_HASHES[remote.name]) {
+      //   return fetched;
+      // }
 
-      fs.unlinkSync(fetched);
-      throw wasReported('Binary hash does NOT match.');
+      // fs.unlinkSync(fetched);
+      // throw wasReported('Binary hash does NOT match.');
     }
 
     fetchFailed = true;
