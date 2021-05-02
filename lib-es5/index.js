@@ -62,7 +62,7 @@ exports.system = exports.need = void 0;
 var fs_extra_1 = __importDefault(require("fs-extra"));
 var path_1 = __importDefault(require("path"));
 var semver_1 = __importDefault(require("semver"));
-var expected_1 = require("./expected");
+// import { EXPECTED_HASHES } from './expected';
 var system_1 = require("./system");
 var system = __importStar(require("./system"));
 exports.system = system;
@@ -167,25 +167,26 @@ function need(opts) {
                         output: output,
                     });
                     remote = places_1.remotePlace({ arch: arch, nodeVersion: nodeVersion, platform: platform, version: package_json_1.version });
-                    if (!!forceBuild) return [3 /*break*/, 3];
+                    if (!!forceBuild) return [3 /*break*/, 2];
                     return [4 /*yield*/, exists(fetched)];
                 case 1:
-                    if (!_c.sent()) return [3 /*break*/, 3];
-                    if (dryRun) {
-                        return [2 /*return*/, 'exists'];
-                    }
-                    return [4 /*yield*/, utils_1.hash(fetched)];
-                case 2:
-                    if ((_c.sent()) === expected_1.EXPECTED_HASHES[remote.name]) {
+                    if (_c.sent()) {
+                        if (dryRun) {
+                            return [2 /*return*/, 'exists'];
+                        }
+                        /* tufan.io: skip hash validation */
                         return [2 /*return*/, fetched];
+                        // if ((await hash(fetched)) === EXPECTED_HASHES[remote.name]) {
+                        //   return fetched;
+                        // }
+                        // log.info('Binary hash does NOT match. Re-fetching...');
+                        // fs.unlinkSync(fetched);
                     }
-                    log_1.log.info('Binary hash does NOT match. Re-fetching...');
-                    fs_extra_1.default.unlinkSync(fetched);
-                    _c.label = 3;
-                case 3:
-                    if (!!forceFetch) return [3 /*break*/, 5];
+                    _c.label = 2;
+                case 2:
+                    if (!!forceFetch) return [3 /*break*/, 4];
                     return [4 /*yield*/, exists(built)];
-                case 4:
+                case 3:
                     if (_c.sent()) {
                         if (dryRun)
                             return [2 /*return*/, 'exists'];
@@ -193,25 +194,25 @@ function need(opts) {
                             log_1.log.info('Reusing base binaries built locally:', built);
                         return [2 /*return*/, built];
                     }
-                    _c.label = 5;
-                case 5:
-                    if (!!forceBuild) return [3 /*break*/, 9];
+                    _c.label = 4;
+                case 4:
+                    if (!!forceBuild) return [3 /*break*/, 6];
                     if (dryRun)
                         return [2 /*return*/, 'fetched'];
                     return [4 /*yield*/, download(remote, fetched)];
-                case 6:
-                    if (!_c.sent()) return [3 /*break*/, 8];
-                    return [4 /*yield*/, utils_1.hash(fetched)];
-                case 7:
-                    if ((_c.sent()) === expected_1.EXPECTED_HASHES[remote.name]) {
+                case 5:
+                    if (_c.sent()) {
                         return [2 /*return*/, fetched];
+                        /* tufan.io: skip hash validation */
+                        // if ((await hash(fetched)) === EXPECTED_HASHES[remote.name]) {
+                        //   return fetched;
+                        // }
+                        // fs.unlinkSync(fetched);
+                        // throw wasReported('Binary hash does NOT match.');
                     }
-                    fs_extra_1.default.unlinkSync(fetched);
-                    throw log_1.wasReported('Binary hash does NOT match.');
-                case 8:
                     fetchFailed = true;
-                    _c.label = 9;
-                case 9:
+                    _c.label = 6;
+                case 6:
                     if (!dryRun && fetchFailed) {
                         log_1.log.info('Not found in remote cache:', JSON.stringify(remote));
                         if (forceFetch) {
@@ -233,7 +234,7 @@ function need(opts) {
                         return [2 /*return*/, 'built'];
                     }
                     return [4 /*yield*/, build_1.default(nodeVersion, arch, platform, built)];
-                case 10:
+                case 7:
                     _c.sent();
                     return [2 /*return*/, built];
             }
