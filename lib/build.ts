@@ -29,7 +29,8 @@ function getConfigureArgs(major: number, targetPlatform: string): string[] {
   // GLIBCXX_3.4.18 on some systems
   // also we don't support any kind of debugging
   // against packaged apps, hence v8_inspector is useless
-  args.push('--without-inspector');
+  /* tufan.io: enable V8 inspector - for composition tests */
+  // args.push('--without-inspector'); 
 
   if (hostPlatform === 'alpine') {
     // Statically Link against libgcc and libstdc++ libraries. See vercel/pkg#555.

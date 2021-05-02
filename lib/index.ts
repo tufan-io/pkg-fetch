@@ -23,7 +23,10 @@ async function download(
   { tag, name }: Remote,
   local: string
 ): Promise<boolean> {
-  const url = `https://github.com/vercel/pkg-fetch/releases/download/${tag}/${name}`;
+  /*
+   * tufan.io: use package specific binary releases
+   */
+  const url = `https://github.com/tufan-io/tufan-pkg-fetch/releases/download/${tag}/${name}`;
 
   try {
     await downloadUrl(url, local);

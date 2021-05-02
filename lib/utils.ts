@@ -18,6 +18,7 @@ export async function downloadUrl(url: string, file: string) {
 
   const ws = fs.createWriteStream(tempFile);
 
+  log.info(`Downloading ${url}`);
   return axios
     .get(url, { responseType: 'stream' })
     .then(({ data, headers }) => {
